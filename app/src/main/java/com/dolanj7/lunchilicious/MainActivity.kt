@@ -67,14 +67,16 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun LunchiliciousUI(myViewModel: MyViewModel){
     Column{
-        CheckoutButton(myViewModel){
+        CheckoutButton(myViewModel.onOrderScreen){
             myViewModel.onOrderScreen = !myViewModel.onOrderScreen
         }
         if(myViewModel.onOrderScreen){
             OrderScreen(myViewModel)
         }
         else{
-            CartScreen(myViewModel)
+            CartScreen(myViewModel.selected, myViewModel.menu, myViewModel.totalCost){
+                myViewModel.updateTotalCost()
+            }
         }
     }
 }
@@ -95,25 +97,28 @@ fun CartItem(item: MenuItem){
 }
 
 
+//what this screen really needs:
+// - the list of selected items
+// - the menu
 @Composable
-fun CartScreen(myViewModel: MyViewModel){
+fun CartScreen(selectedIDs : MutableList<Int>, menu: Menu, totalCost: Double, updateTotal: () -> Unit){
 
     LazyColumn{
-        items(items = myViewModel.selected){ id ->
-            val item = myViewModel.menu.getItemById(id)
+        items(items = selectedIDs){ id ->
+            val item = menu.getItemById(id)
             CartItem(item)
         }
     }
 
     Divider(modifier = Modifier.padding(vertical = 5.dp))
     //total cost
-    myViewModel.updateTotalCost()
-    Text("Total: $" + String.format("%.2f", myViewModel.totalCost))
+    updateTotal()
+    Text("Total: $" + String.format("%.2f", totalCost))
 }
 @Composable
-fun CheckoutButton(myViewModel: MyViewModel, onClick: () -> Unit) {
+fun CheckoutButton(onOrderScreen: Boolean, onClick: () -> Unit) {
     Button(onClick = onClick){
-        if(myViewModel.onOrderScreen){
+        if(onOrderScreen){
             Text("Place Order")
         }
         else{
@@ -193,71 +198,3 @@ data class MenuItem(val id: Int,
                     val name: String,
                     val description: String,
                     val unitPrice: Double)
-
-class Menu(){
-    private val menuItems = createList()
-
-    fun getMenuList(): List<MenuItem>{
-        return menuItems
-    }
-
-    fun getItemById(id: Int): MenuItem{
-        for(item in menuItems){
-            if(item.id == id){
-                return item
-            }
-        }
-        return MenuItem(-1, "", "error", "error", 0.0)
-    }
-    private fun createList(): List<MenuItem>{
-
-        val items = mutableListOf<MenuItem>()
-
-        items+=MenuItem(
-            1,
-            "Hot",
-            "Burger",
-            "with Lettuce and Tomato",
-            6.99)
-
-        items+=MenuItem(
-            2,
-            "Hot",
-            "Hot Dog",
-            "",
-            3.99)
-
-        items+=MenuItem(
-            3,
-            "Side",
-            "French Fries",
-            "",
-            1.99)
-
-        items+=MenuItem(
-            4,
-            "Side",
-            "Salad",
-            "with Ranch or Caesar dressing",
-            2.49
-        )
-
-        items+=MenuItem(
-            5,
-            "Cold",
-            "Sushi",
-            "Spicy Tuna Roll",
-            5.0
-        )
-
-        items+=MenuItem(
-            6,
-            "Hot",
-            "Chicken Sandwich",
-            "",
-            3.66
-        )
-
-        return items
-    }
-}
