@@ -1,5 +1,6 @@
 package com.dolanj7.lunchilicious
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -52,11 +53,8 @@ class MainActivity : ComponentActivity() {
                         .padding(all = 20.dp),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //menu item list-- save this in the viewmodel!
-                    val myViewModel: MyViewModel by viewModels()
-
-
-                    LunchiliciousUI(myViewModel)
+                    val vm: MyViewModel by viewModels()
+                    LunchiliciousUI(vm)
 
                 }
             }
@@ -65,136 +63,43 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun LunchiliciousUI(myViewModel: MyViewModel){
+fun LunchiliciousUI(vm: MyViewModel){
     Column{
-        CheckoutButton(myViewModel.onOrderScreen){
-            myViewModel.onOrderScreen = !myViewModel.onOrderScreen
-        }
-        if(myViewModel.onOrderScreen){
-            OrderScreen(myViewModel)
+        if(vm.onOrderScreen){
+            OrderScreen(vm.selected, vm.menu){
+                vm.onOrderScreen = !vm.onOrderScreen
+            }
         }
         else{
-            CartScreen(myViewModel.selected, myViewModel.menu, myViewModel.totalCost){
-                myViewModel.updateTotalCost()
+            CartScreen(vm.selected, vm.menu, vm.getTotalCost()){
+                vm.onOrderScreen = !vm.onOrderScreen
             }
         }
     }
 }
 
 @Composable
-fun CartItem(item: MenuItem){
-    Row (modifier = Modifier.padding(vertical = 5.dp)){
-        Text(
-            "id: ${item.id}, ${item.type}",
-            modifier = Modifier.width(100.dp)
-        )
-        Text(
-            item.name,
-            modifier = Modifier.width(150.dp)
-        )
-        Text("$" + String.format("%.2f", item.unitPrice))
-    }
-}
-
-
-//what this screen really needs:
-// - the list of selected items
-// - the menu
-@Composable
-fun CartScreen(selectedIDs : MutableList<Int>, menu: Menu, totalCost: Double, updateTotal: () -> Unit){
-
-    LazyColumn{
-        items(items = selectedIDs){ id ->
-            val item = menu.getItemById(id)
-            CartItem(item)
-        }
-    }
-
-    Divider(modifier = Modifier.padding(vertical = 5.dp))
-    //total cost
-    updateTotal()
-    Text("Total: $" + String.format("%.2f", totalCost))
-}
-@Composable
-fun CheckoutButton(onOrderScreen: Boolean, onClick: () -> Unit) {
-    Button(onClick = onClick){
-        if(onOrderScreen){
-            Text("Place Order")
-        }
-        else{
-            Text("Continue Shopping")
-        }
-    }
-}
-
-@Composable
-fun OrderScreen(myViewModel: MyViewModel){
-    LazyColumn() {
-        items(items = myViewModel.menu.getMenuList()) { item ->
-            MenuCard(item, myViewModel)
-        }
-    }
-}
-@Composable
-fun MenuCard(item: MenuItem, myViewModel: MyViewModel){
-    var checked by remember { mutableStateOf(myViewModel.selected.contains(item.id)) }
-    OutlinedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .padding(10.dp)
-    ) {
-        Row (modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically){
-            Column(modifier = Modifier
-                .padding(start = 10.dp)
-                .fillMaxWidth(.7f)){
-                Text(
-                    text = item.name,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "id: ${item.id}, ${item.type}"
-                )
-            }
-            Text("$" + String.format("%.2f", item.unitPrice))
-            Checkbox(
-                checked = checked,
-                onCheckedChange = {
-                    if(it){
-                        myViewModel.selected.add(item.id)
-                    }
-                    else{
-                        myViewModel.selected.remove(item.id)
-                    }
-                    checked = it
-                })
-        }
+fun CheckoutButton(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Button(onClick = onClick, modifier = modifier){
+            Text(label)
     }
 }
 
 //ViewModel
+//TODO make the viewModel its own file
+
 class MyViewModel: ViewModel(){
     var menu by mutableStateOf(Menu())
-    val selected by mutableStateOf(mutableListOf<Int>())
+    val selected by mutableStateOf(mutableListOf<Int>()) //TODO figure this out???
     var onOrderScreen by mutableStateOf(true)
-    var totalCost by mutableDoubleStateOf(0.0)
 
-    fun updateTotalCost(){
-        totalCost = 0.0
+    fun getTotalCost(): Double{
+        var totalCost = 0.0
         for(id in selected){
             val item = menu.getItemById(id)
-
             totalCost +=item.unitPrice
         }
+        return totalCost
     }
 
 }
-
-
-data class MenuItem(val id: Int,
-                    val type: String,
-                    val name: String,
-                    val description: String,
-                    val unitPrice: Double)

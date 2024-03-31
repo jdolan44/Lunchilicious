@@ -1,5 +1,11 @@
 package com.dolanj7.lunchilicious
 
+data class MenuItem(val id: Int,
+                    val type: String,
+                    val name: String,
+                    val description: String,
+                    val unitPrice: Double)
+
 class Menu(){
     private val menuItems = createList()
 
@@ -19,49 +25,65 @@ class Menu(){
 
         val items = mutableListOf<MenuItem>()
 
-        items+=MenuItem(
-            1,
-            "Hot",
-            "Burger",
-            "with Lettuce and Tomato",
-            6.99)
-
-        items+=MenuItem(
-            2,
-            "Hot",
-            "Hot Dog",
-            "",
-            3.99)
-
-        items+=MenuItem(
-            3,
-            "Side",
-            "French Fries",
-            "",
-            1.99)
-
-        items+=MenuItem(
-            4,
-            "Side",
-            "Salad",
-            "with Ranch or Caesar dressing",
-            2.49
+        items.add(
+            MenuItem(
+                1, "Hoagie",
+                "BLT Hoagie", "Cold, Onion, lettuce, tomato", 6.95
+            )
+        )
+        items.add(
+            MenuItem(
+                2, "Hoagie",
+                "Cheese Hoagie", "Cheese, mayo, lettuce, tomato", 6.95
+            )
+        )
+        items.add(
+            MenuItem(
+                3, "Pizza",
+                "Plain Pizza", "cheese and tomato", 9.50
+            )
+        )
+        items.add(
+            MenuItem(
+                4, "Side",
+                "Fries", "large hot fries", 2.95
+            )
+        )
+        items.add(
+            MenuItem(
+                5, "Side",
+                "Gravy Fries", "Fries with gravy on top", 3.95
+            )
         )
 
-        items+=MenuItem(
-            5,
-            "Cold",
-            "Sushi",
-            "Spicy Tuna Roll",
-            5.0
+        items.add(
+            MenuItem(
+            6, "Burger",
+            "Cheeseburger", "with lettuce, tomato, onion, american cheese", 6.99
+            )
         )
 
-        items+=MenuItem(
-            6,
-            "Hot",
-            "Chicken Sandwich",
-            "",
-            3.66
+        items.add(
+            MenuItem(
+            7, "Hot",
+            "Hot Dog", "with ketchup and mustard", 3.99)
+        )
+
+        items.add(
+            MenuItem(
+            8, "Hot",
+            "Chicken Sandwich", "with lettuce and tomato", 1.99)
+        )
+
+        items.add(
+            MenuItem(
+            9, "Side",
+            "Salad", "with Ranch or Caesar dressing",2.49)
+        )
+
+        items.add(MenuItem(
+            10, "Cold",
+            "Sushi","Spicy Tuna Roll", 5.0)
         )
 
         return items
