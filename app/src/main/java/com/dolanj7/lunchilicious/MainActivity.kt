@@ -45,12 +45,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LunchiliciousTheme {
+            LunchiliciousTheme(dynamicColor = false) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(all = 20.dp),
+                        .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val vm: MyViewModel by viewModels()
@@ -64,7 +63,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun LunchiliciousUI(vm: MyViewModel){
-    Column{
+    Column(modifier = Modifier.padding(all = 10.dp)){
         if(vm.onOrderScreen){
             OrderScreen(vm.selected, vm.menu){
                 vm.onOrderScreen = !vm.onOrderScreen

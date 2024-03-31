@@ -2,6 +2,7 @@ package com.dolanj7.lunchilicious
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,7 +40,10 @@ fun OrderScreen(selectedIDs: MutableList<Int>, menu: Menu, screenSwitch: () -> U
         Text("Lunchilicious!", modifier = Modifier.weight(1f))
         LazyColumn(modifier = Modifier.weight(15f)) {
             items(items = menu.getMenuList()) { item ->
-                MenuCard(item, selectedIDs)
+                MenuCard(item, selectedIDs.contains(item.id)){
+                    if(it){ selectedIDs.add(item.id) }
+                    else{ selectedIDs.remove(item.id) }
+                }
             }
         }
         CheckoutButton("Place Order"){
@@ -48,47 +52,30 @@ fun OrderScreen(selectedIDs: MutableList<Int>, menu: Menu, screenSwitch: () -> U
     }
 }
 
-//TODO this one's a little long... maybe make the checkbox its own function?
-//TODO also can I remove the row scope??? might be able to add vertical alignment to card
-//idea: don't pass all of selectedIDs into the menu card.
-// just pass the boolean and the onClick
+
 @Composable
-fun MenuCard(item: MenuItem, selectedIDs: MutableList<Int>){
-    var checked by remember { mutableStateOf(selectedIDs.contains(item.id)) }
+fun MenuCard(item: MenuItem, selected: Boolean, onCheckedChange: (Boolean) -> Unit){
     var expanded by remember{ mutableStateOf(false) }
+    var checked by remember { mutableStateOf(selected) }
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            //.height(100.dp)
             .padding(10.dp)
     ) {
-        Row (modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
+        Row (modifier = Modifier.fillMaxSize().padding(10.dp),
             verticalAlignment = Alignment.CenterVertically){
-            DescriptionToggle(expanded){
-                expanded = !expanded
-            }
-            Column(modifier = Modifier
-                .padding(start = 10.dp)
-                .weight(7f)){
-                Text(
-                    text = item.name,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text("id: ${item.id}, ${item.type}")
+            DescriptionToggle(expanded){ expanded = !expanded }
+            ItemHeader(item, modifier =  Modifier.padding(start = 10.dp).weight(7f))
 
-            }
-
+            //cost display
+            //TODO make this its own method (and reuse it for cart screen)
             Text(modifier = Modifier.weight(2f), text = "$" + String.format("%.2f", item.unitPrice))
 
-            Checkbox(
-                modifier = Modifier.weight(1f),
+            //order checkbox
+            Checkbox(modifier = Modifier.weight(1f),
                 checked = checked,
                 onCheckedChange = {
-                    if(it){ selectedIDs.add(item.id) }
-                    else{ selectedIDs.remove(item.id) }
+                    onCheckedChange(it)
                     checked = it
                 })
 
@@ -109,6 +96,18 @@ fun DescriptionToggle(expanded: Boolean, onClick: () -> Unit) {
         else{
             Icon(Icons.Filled.KeyboardArrowDown, "Show description.")
         }
+    }
+}
+
+@Composable
+fun ItemHeader(item: MenuItem, modifier: Modifier = Modifier){
+    Column(modifier = modifier){
+        Text(
+            text = item.name,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Text("id: ${item.id}, ${item.type}")
     }
 }
 
