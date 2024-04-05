@@ -43,7 +43,7 @@ class MyViewModel: ViewModel(){
     fun getTotalCost(): Double{
         var totalCost = 0.0
         for(id in selected){
-            val item = menu.getItemById(id)
+            val item = menu.getItem(id)
             totalCost +=item.unitPrice
         }
         return totalCost

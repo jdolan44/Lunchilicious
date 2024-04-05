@@ -18,7 +18,7 @@ fun CartScreen(selectedIDs : MutableList<Int>, menu: Menu, totalCost: Double, sc
     Column{
         LazyColumn(modifier = Modifier.weight(8f)){
             items(items = selectedIDs){ id ->
-                val item = menu.getItemById(id)
+                val item = menu.getItem(id)
                 CartItem(item)
             }
         }
