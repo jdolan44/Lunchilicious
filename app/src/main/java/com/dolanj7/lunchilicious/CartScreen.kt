@@ -1,5 +1,6 @@
 package com.dolanj7.lunchilicious
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -14,19 +15,21 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CartScreen(selectedIDs : MutableList<Int>, menu: Menu, totalCost: Double, screenSwitch: () -> Unit){
-    CheckoutButton("Continue Shopping"){
-        screenSwitch()
-    }
-    LazyColumn{
-        items(items = selectedIDs){ id ->
-            val item = menu.getItemById(id)
-            CartItem(item)
+    Column{
+        LazyColumn(modifier = Modifier.weight(8f)){
+            items(items = selectedIDs){ id ->
+                val item = menu.getItemById(id)
+                CartItem(item)
+            }
+        }
+
+        Divider(modifier = Modifier.padding(vertical = 5.dp))
+        //total cost
+        Text("Total: $" + String.format("%.2f", totalCost), modifier = Modifier.weight(2f))
+        CheckoutButton("Continue Shopping"){
+            screenSwitch()
         }
     }
-
-    Divider(modifier = Modifier.padding(vertical = 5.dp))
-    //total cost
-    Text("Total: $" + String.format("%.2f", totalCost))
 }
 
 @Composable
