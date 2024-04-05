@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.sp
 fun OrderScreen(selectedIDs: MutableList<Int>, menu: Menu, screenSwitch: () -> Unit){
     Column{
         //TODO make this look better
-        //Text("Lunchilicious!", modifier = Modifier.weight(1f))
+        Text("Lunchilicious (database version)", modifier = Modifier.weight(1f))
         LazyColumn(modifier = Modifier.weight(15f)) {
             items(items = menu.getMenuList()) { item ->
                 MenuCard(item, selectedIDs.contains(item.id)){
