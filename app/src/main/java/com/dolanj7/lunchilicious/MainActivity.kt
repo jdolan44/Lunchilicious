@@ -1,6 +1,7 @@
 package com.dolanj7.lunchilicious
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -39,7 +40,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dolanj7.lunchilicious.ui.theme.LunchiliciousTheme
+
+class MenuApplication : Application() {
+    lateinit var menuRepository: MenuRepository
+    override fun onCreate() {
+        super.onCreate()
+        menuRepository =
+            MenuRepositoryImpl(MenuDatabase.getDatabase(this))
+    }
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,10 +64,18 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val vm: MyViewModel by viewModels()
-                    LunchiliciousUI(vm)
+                    val menuVm: MenuViewModel = viewModel(factory = MenuViewModel.Factory)
+                    LunchiliciousUI(vm, menuVm)
 
                 }
             }
         }
+    }
+}
+
+@Composable
+fun TestButton(menuVm: MenuViewModel = viewModel(factory = MenuViewModel.Factory)){
+    Button(onClick = {menuVm.insertItem()}){
+        Text("Hello")
     }
 }

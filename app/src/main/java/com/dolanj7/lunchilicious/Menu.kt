@@ -60,9 +60,9 @@ abstract class MenuDatabase : RoomDatabase() {
 interface MenuRepository {
     fun getMenuListStream(): Flow<List<MenuItem>>
     fun getItemStream(id: Int): Flow<MenuItem?>
-    suspend fun insertItem(student: MenuItem)
-    suspend fun deleteItem(student: MenuItem)
-    suspend fun updateItem(student: MenuItem)
+    suspend fun insertItem(item: MenuItem)
+    suspend fun deleteItem(item: MenuItem)
+    suspend fun updateItem(item: MenuItem)
 }
 
 class MenuRepositoryImpl(private val menuDb: MenuDatabase) : MenuRepository {
