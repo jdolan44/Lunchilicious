@@ -22,8 +22,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 
 @Composable
-fun LunchiliciousUI(vm: MyViewModel, menuVm: MenuViewModel){
-    val menuList by menuVm.getMenuListStream().collectAsState(initial = emptyList())
+fun LunchiliciousUI(vm: MenuViewModel){
+    val menuList by vm.getMenuListStream().collectAsState(initial = emptyList())
     Column(modifier = Modifier.padding(all = 10.dp)){
         if(vm.onOrderScreen){
             OrderScreen(vm.selected, menuList){
@@ -32,18 +32,21 @@ fun LunchiliciousUI(vm: MyViewModel, menuVm: MenuViewModel){
         }
         else{
             //TODO get list of selected items first, then pass into CartScreen
-            val cartList = mutableListOf<MenuItem>()
-            vm.selected.forEach{
-                val item by menuVm.getItem(it).collectAsState(initial = null)
-                if(item != null){
-                    cartList.add(item!!)
-                }
-            }
+            val cartList = getCart(vm)
             CartScreen(cartList, vm.getTotalCost()){
                 vm.onOrderScreen = !vm.onOrderScreen
             }
         }
     }
+}
+@Composable
+fun getCart(vm: MenuViewModel): MutableList<MenuItem>{
+    val cartList = mutableListOf<MenuItem>()
+    vm.selected.forEach{
+        val item by vm.getItem(it).collectAsState(initial = null)
+        if(item != null){ cartList.add(item!!) }
+    }
+    return cartList
 }
 
 @Composable
@@ -53,7 +56,7 @@ fun CheckoutButton(label: String, modifier: Modifier = Modifier, onClick: () -> 
     }
 }
 
-class MyViewModel: ViewModel(){
+class MenuViewModel(private val menuRepo : MenuRepository): ViewModel(){
     var menu by mutableStateOf(Menu())
     val selected by mutableStateOf(mutableListOf<Int>())
     var onOrderScreen by mutableStateOf(true)
@@ -67,9 +70,6 @@ class MyViewModel: ViewModel(){
         return totalCost
     }
 
-}
-
-class MenuViewModel(private val menuRepo : MenuRepository): ViewModel(){
     fun insertItem(){
         viewModelScope.launch(){
             val item = MenuItem(1, "test", "test food", "desc", 1.00)
@@ -83,10 +83,6 @@ class MenuViewModel(private val menuRepo : MenuRepository): ViewModel(){
 
     fun getItem(id: Int): Flow<MenuItem?>{
         return menuRepo.getItemStream(id)
-    }
-
-    suspend fun getCartItems(selected: MutableList<Int>){
-
     }
 
     companion object {

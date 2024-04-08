@@ -70,9 +70,8 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val vm: MyViewModel by viewModels()
                     val menuVm: MenuViewModel = viewModel(factory = MenuViewModel.Factory)
-                    LunchiliciousUI(vm, menuVm)
+                    LunchiliciousUI(menuVm)
 
                 }
             }
