@@ -2,6 +2,7 @@ package com.dolanj7.lunchilicious
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -41,7 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.dolanj7.lunchilicious.ui.theme.LunchiliciousTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MenuApplication : Application() {
     lateinit var menuRepository: MenuRepository
@@ -79,3 +86,4 @@ fun TestButton(menuVm: MenuViewModel = viewModel(factory = MenuViewModel.Factory
         Text("Hello")
     }
 }
+

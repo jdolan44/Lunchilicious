@@ -12,7 +12,11 @@ import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.Update
+import androidx.sqlite.db.SupportSQLiteDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 @Entity(tableName = "menu_item")
 data class MenuItem(
@@ -49,10 +53,85 @@ abstract class MenuDatabase : RoomDatabase() {
         fun getDatabase(context: Context): MenuDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context,
-                    MenuDatabase::class.java, "my_student_database")
+                    MenuDatabase::class.java, "menu_database")
+                    .addCallback(object : Callback() {
+                        override fun onOpen(db: SupportSQLiteDatabase) {
+                            super.onOpen(db)
+// moving to a new thread
+                            GlobalScope.launch(context = Dispatchers.IO){
+                                val studentDao = getDatabase(context).menuDao()
+                                prepopulateMenu(studentDao)
+                            }
+                        }
+                    })
+                    .fallbackToDestructiveMigration()
                     .build()
                     .also { Instance = it }
             }
+        }
+
+        private suspend fun prepopulateMenu(menuDao: MenuDao) {
+            menuDao.deleteAll()
+            menuDao.insert(
+                MenuItem(
+                    1, "Hoagie",
+                    "BLT Hoagie", "Cold, Onion, lettuce, tomato", 6.95
+                )
+            )
+            menuDao.insert(
+                MenuItem(
+                    2, "Hoagie",
+                    "Cheese Hoagie", "Cheese, mayo, lettuce, tomato", 6.95
+                )
+            )
+            menuDao.insert(
+                MenuItem(
+                    3, "Pizza",
+                    "Plain Pizza", "cheese and tomato", 9.50
+                )
+            )
+            menuDao.insert(
+                MenuItem(
+                    4, "Side",
+                    "Fries", "large hot fries", 2.95
+                )
+            )
+            menuDao.insert(
+                MenuItem(
+                    5, "Side",
+                    "Gravy Fries", "Fries with gravy on top", 3.95
+                )
+            )
+
+            menuDao.insert(
+                MenuItem(
+                    6, "Burger",
+                    "Cheeseburger", "with lettuce, tomato, onion, american cheese", 6.99
+                )
+            )
+
+            menuDao.insert(
+                MenuItem(
+                    7, "Hot",
+                    "Hot Dog", "with ketchup and mustard", 3.99)
+            )
+
+            menuDao.insert(
+                MenuItem(
+                    8, "Hot",
+                    "Chicken Sandwich", "with lettuce and tomato", 1.99)
+            )
+
+            menuDao.insert(
+                MenuItem(
+                    9, "Side",
+                    "Salad", "with Ranch or Caesar dressing",2.49)
+            )
+
+            menuDao.insert(MenuItem(
+                10, "Cold",
+                "Sushi","Spicy Tuna Roll", 5.0)
+            )
         }
     }
 }
