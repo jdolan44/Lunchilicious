@@ -31,9 +31,8 @@ fun LunchiliciousUI(vm: MenuViewModel){
             }
         }
         else{
-            //TODO get list of selected items first, then pass into CartScreen
             val cartList = getCart(vm)
-            CartScreen(cartList, vm.getTotalCost()){
+            CartScreen(cartList, getTotalCost(cartList)){
                 vm.onOrderScreen = !vm.onOrderScreen
             }
         }
@@ -49,6 +48,14 @@ fun getCart(vm: MenuViewModel): MutableList<MenuItem>{
     return cartList
 }
 
+fun getTotalCost(items: MutableList<MenuItem>): Double{
+    var totalCost = 0.0
+    items.forEach{
+        totalCost +=it.unitPrice
+    }
+    return totalCost
+}
+
 @Composable
 fun CheckoutButton(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Button(onClick = onClick, modifier = modifier){
@@ -57,18 +64,8 @@ fun CheckoutButton(label: String, modifier: Modifier = Modifier, onClick: () -> 
 }
 
 class MenuViewModel(private val menuRepo : MenuRepository): ViewModel(){
-    var menu by mutableStateOf(Menu())
     val selected by mutableStateOf(mutableListOf<Int>())
     var onOrderScreen by mutableStateOf(true)
-
-    fun getTotalCost(): Double{
-        var totalCost = 0.0
-        for(id in selected){
-            val item = menu.getItem(id)
-            totalCost +=item.unitPrice
-        }
-        return totalCost
-    }
 
     fun insertItem(){
         viewModelScope.launch(){

@@ -28,6 +28,7 @@ fun CartScreen(cart: MutableList<MenuItem>, totalCost: Double, screenSwitch: () 
         CheckoutButton("Continue Shopping"){
             screenSwitch()
         }
+        CheckoutButton("Checkout"){}
     }
 }
 

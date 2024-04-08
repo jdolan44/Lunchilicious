@@ -46,7 +46,7 @@ fun OrderScreen(selectedIDs: MutableList<Int>, menuList: List<MenuItem>, screenS
                 }
             }
         }
-        CheckoutButton("Place Order"){
+        CheckoutButton("View Cart"){
             screenSwitch()
         }
     }
