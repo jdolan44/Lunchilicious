@@ -18,10 +18,12 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun LunchiliciousUI(vm: MyViewModel, menuVm: MenuViewModel){
-    val menuList by menuVm.getMenuList().collectAsState(initial = emptyList())
+    val menuList by menuVm.getMenuListStream().collectAsState(initial = emptyList())
     Column(modifier = Modifier.padding(all = 10.dp)){
         if(vm.onOrderScreen){
             OrderScreen(vm.selected, menuList){
@@ -29,7 +31,15 @@ fun LunchiliciousUI(vm: MyViewModel, menuVm: MenuViewModel){
             }
         }
         else{
-            CartScreen(vm.selected, vm.menu, vm.getTotalCost()){
+            //TODO get list of selected items first, then pass into CartScreen
+            val cartList = mutableListOf<MenuItem>()
+            vm.selected.forEach{
+                val item by menuVm.getItem(it).collectAsState(initial = null)
+                if(item != null){
+                    cartList.add(item!!)
+                }
+            }
+            CartScreen(cartList, vm.getTotalCost()){
                 vm.onOrderScreen = !vm.onOrderScreen
             }
         }
@@ -67,8 +77,16 @@ class MenuViewModel(private val menuRepo : MenuRepository): ViewModel(){
         }
     }
 
-    fun getMenuList(): Flow<List<MenuItem>> {
+    fun getMenuListStream(): Flow<List<MenuItem>> {
         return menuRepo.getMenuListStream()
+    }
+
+    fun getItem(id: Int): Flow<MenuItem?>{
+        return menuRepo.getItemStream(id)
+    }
+
+    suspend fun getCartItems(selected: MutableList<Int>){
+
     }
 
     companion object {

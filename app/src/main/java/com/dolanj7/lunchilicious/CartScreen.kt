@@ -12,13 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-
+//TODO change to take in just the list of selected items
 @Composable
-fun CartScreen(selectedIDs : MutableList<Int>, menu: Menu, totalCost: Double, screenSwitch: () -> Unit){
+fun CartScreen(cart: MutableList<MenuItem>, totalCost: Double, screenSwitch: () -> Unit){
     Column{
         LazyColumn(modifier = Modifier.weight(8f)){
-            items(items = selectedIDs){ id ->
-                val item = menu.getItem(id)
+            items(items = cart){ item ->
                 CartItem(item)
             }
         }
