@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 
 @Entity(tableName = "menu_item")
 data class MenuItem(
-    @PrimaryKey
-    val id: Int = 0,
+    @PrimaryKey (autoGenerate = true)
+    val id: Long = 0,
     val type: String,
     val name: String,
     val description: String,
@@ -30,7 +30,7 @@ data class MenuItem(
 @Dao
 interface MenuDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(item: MenuItem)
+    suspend fun insert(item: MenuItem) : Long
     @Update
     suspend fun update(item: MenuItem)
     @Delete
@@ -38,15 +38,27 @@ interface MenuDao{
     @Query("Delete from menu_item")
     suspend fun deleteAll()
     @Query("SELECT * from menu_item WHERE id = :id")
-    fun getItem(id: Int): Flow<MenuItem>
+    fun getItem(id: Long): Flow<MenuItem>
     @Query("SELECT * from menu_item ORDER BY id ASC")
     fun getMenuList(): Flow<List<MenuItem>>
 }
+@Entity(tableName = "food_order")
+data class FoodOrder(
+    @PrimaryKey (autoGenerate = true)
+    val id: Long = 0,
+    val totalCost: Double
+)
+@Dao
+interface FoodOrderDao{
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(order: FoodOrder) : Long
+}
 
 //TODO look at step 7 for adding multiple tables!
-@Database(entities = [MenuItem::class], version = 1, exportSchema = false)
+@Database(entities = [MenuItem::class, FoodOrder::class], version = 2, exportSchema = false)
 abstract class MenuDatabase : RoomDatabase() {
     abstract fun menuDao(): MenuDao
+    abstract fun FoodOrderDao(): FoodOrderDao
     companion object {
         @Volatile
         private var Instance: MenuDatabase? = null
@@ -128,9 +140,10 @@ abstract class MenuDatabase : RoomDatabase() {
                     "Salad", "with Ranch or Caesar dressing",2.49)
             )
 
-            menuDao.insert(MenuItem(
-                10, "Cold",
-                "Sushi","Spicy Tuna Roll", 5.0)
+            menuDao.insert(
+                MenuItem(
+                    10, "Cold",
+                    "Sushi","Spicy Tuna Roll", 5.0)
             )
         }
     }
@@ -138,8 +151,8 @@ abstract class MenuDatabase : RoomDatabase() {
 
 interface MenuRepository {
     fun getMenuListStream(): Flow<List<MenuItem>>
-    fun getItemStream(id: Int): Flow<MenuItem?>
-    suspend fun insertItem(item: MenuItem)
+    fun getItemStream(id: Long): Flow<MenuItem?>
+    suspend fun insertItem(item: MenuItem): Long
     suspend fun deleteItem(item: MenuItem)
     suspend fun updateItem(item: MenuItem)
 }
@@ -147,12 +160,12 @@ interface MenuRepository {
 class MenuRepositoryImpl(private val menuDb: MenuDatabase) : MenuRepository {
     override fun getMenuListStream(): Flow<List<MenuItem>> =
         menuDb.menuDao().getMenuList()
-    override fun getItemStream(id: Int): Flow<MenuItem?> =
+    override fun getItemStream(id: Long): Flow<MenuItem?> =
         menuDb.menuDao().getItem(id)
-    override suspend fun insertItem(student: MenuItem) =
-        menuDb.menuDao().insert(student)
-    override suspend fun deleteItem(student: MenuItem) =
-        menuDb.menuDao().delete(student)
-    override suspend fun updateItem(student: MenuItem) =
-        menuDb.menuDao().update(student)
+    override suspend fun insertItem(item: MenuItem) =
+        menuDb.menuDao().insert(item)
+    override suspend fun deleteItem(item: MenuItem) =
+        menuDb.menuDao().delete(item)
+    override suspend fun updateItem(item: MenuItem) =
+        menuDb.menuDao().update(item)
 }

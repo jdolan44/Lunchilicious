@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun OrderScreen(selectedIDs: MutableList<Int>, menuList: List<MenuItem>, screenSwitch: () -> Unit){
+fun OrderScreen(selectedIDs: MutableList<Long>, menuList: List<MenuItem>, screenSwitch: () -> Unit){
     Column{
         //TODO make this look better
         Text("Lunchilicious (database version)", modifier = Modifier.weight(1f))

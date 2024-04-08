@@ -18,8 +18,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 
 @Composable
 fun LunchiliciousUI(vm: MenuViewModel){
@@ -64,7 +62,7 @@ fun CheckoutButton(label: String, modifier: Modifier = Modifier, onClick: () -> 
 }
 
 class MenuViewModel(private val menuRepo : MenuRepository): ViewModel(){
-    val selected by mutableStateOf(mutableListOf<Int>())
+    val selected by mutableStateOf(mutableListOf<Long>())
     var onOrderScreen by mutableStateOf(true)
 
     fun insertItem(){
@@ -78,7 +76,7 @@ class MenuViewModel(private val menuRepo : MenuRepository): ViewModel(){
         return menuRepo.getMenuListStream()
     }
 
-    fun getItem(id: Int): Flow<MenuItem?>{
+    fun getItem(id: Long): Flow<MenuItem?>{
         return menuRepo.getItemStream(id)
     }
 
