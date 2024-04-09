@@ -1,6 +1,8 @@
 package com.dolanj7.lunchilicious
 
 import android.annotation.SuppressLint
+import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -39,7 +41,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.dolanj7.lunchilicious.ui.theme.LunchiliciousTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
+class MenuApplication : Application() {
+    lateinit var menuRepository: MenuRepository
+    override fun onCreate() {
+        super.onCreate()
+        menuRepository =
+            MenuRepositoryImpl(MenuDatabase.getDatabase(this))
+    }
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,53 +70,11 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val vm: MyViewModel by viewModels()
-                    LunchiliciousUI(vm)
-
+                    val menuVm: MenuViewModel = viewModel(factory = MenuViewModel.Factory)
+                    LunchiliciousUI(menuVm)
                 }
             }
         }
     }
 }
 
-@Composable
-fun LunchiliciousUI(vm: MyViewModel){
-    Column(modifier = Modifier.padding(all = 10.dp)){
-        if(vm.onOrderScreen){
-            OrderScreen(vm.selected, vm.menu){
-                vm.onOrderScreen = !vm.onOrderScreen
-            }
-        }
-        else{
-            CartScreen(vm.selected, vm.menu, vm.getTotalCost()){
-                vm.onOrderScreen = !vm.onOrderScreen
-            }
-        }
-    }
-}
-
-@Composable
-fun CheckoutButton(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Button(onClick = onClick, modifier = modifier){
-            Text(label)
-    }
-}
-
-//ViewModel
-//TODO make the viewModel its own file
-
-class MyViewModel: ViewModel(){
-    var menu by mutableStateOf(Menu())
-    val selected by mutableStateOf(mutableListOf<Int>()) //TODO figure this out???
-    var onOrderScreen by mutableStateOf(true)
-
-    fun getTotalCost(): Double{
-        var totalCost = 0.0
-        for(id in selected){
-            val item = menu.getItemById(id)
-            totalCost +=item.unitPrice
-        }
-        return totalCost
-    }
-
-}
