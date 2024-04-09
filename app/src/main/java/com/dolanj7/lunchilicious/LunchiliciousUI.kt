@@ -30,9 +30,12 @@ fun LunchiliciousUI(vm: MenuViewModel){
         }
         else{
             val cartList = getCart(vm)
-            CartScreen(cartList, getTotalCost(cartList)){
-                vm.onOrderScreen = !vm.onOrderScreen
-            }
+            val totalCost = getTotalCost(cartList)
+            CartScreen(cartList, totalCost,
+                screenSwitch = { vm.onOrderScreen = !vm.onOrderScreen },
+                placeOrder = {
+                    vm.placeOrder(cartList, totalCost)
+                })
         }
     }
 }
@@ -78,6 +81,18 @@ class MenuViewModel(private val menuRepo : MenuRepository): ViewModel(){
 
     fun getItem(id: Long): Flow<MenuItem?>{
         return menuRepo.getItemStream(id)
+    }
+
+    fun placeOrder(items: MutableList<MenuItem>, totalCost: Double){
+        viewModelScope.launch(){
+            val oid = menuRepo.insertOrder(FoodOrder(totalCost = totalCost))
+            var lineNo: Long= 1
+            items.forEach{
+                val lineItem = LineItem(oid, lineNo, it.id)
+                lineNo += 1
+                menuRepo.insertLineItem(lineItem)
+            }
+        }
     }
 
     companion object {

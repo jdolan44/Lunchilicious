@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 
 //TODO change to take in just the list of selected items
 @Composable
-fun CartScreen(cart: MutableList<MenuItem>, totalCost: Double, screenSwitch: () -> Unit){
+fun CartScreen(cart: MutableList<MenuItem>, totalCost: Double, screenSwitch: () -> Unit, placeOrder: () -> Unit){
     Column{
         LazyColumn(modifier = Modifier.weight(8f)){
             items(items = cart){ item ->
@@ -28,7 +28,11 @@ fun CartScreen(cart: MutableList<MenuItem>, totalCost: Double, screenSwitch: () 
         CheckoutButton("Continue Shopping"){
             screenSwitch()
         }
-        CheckoutButton("Checkout"){}
+        CheckoutButton("Checkout"){
+            placeOrder()
+            //move back to order screen after checkout
+            screenSwitch()
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 package com.dolanj7.lunchilicious
 
 import android.content.Context
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Delete
@@ -52,13 +53,36 @@ data class FoodOrder(
 interface FoodOrderDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(order: FoodOrder) : Long
+    @Update
+    suspend fun update(order: FoodOrder)
+    @Delete
+    suspend fun delete(order: FoodOrder)
+    @Query("Delete from food_order")
+    suspend fun deleteAll()
 }
+@Entity(tableName = "line_item", primaryKeys = ["oid", "lineNo"])
+data class LineItem(
+    val oid: Long = 0,
+    val lineNo: Long,
+    val itemId: Long = 0
+)
 
-//TODO look at step 7 for adding multiple tables!
-@Database(entities = [MenuItem::class, FoodOrder::class], version = 2, exportSchema = false)
+@Dao
+interface LineItemDao{
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(item: LineItem) : Long
+    @Update
+    suspend fun update(item: LineItem)
+    @Delete
+    suspend fun delete(item: LineItem)
+    @Query("Delete from line_item")
+    suspend fun deleteAll()
+}
+@Database(entities = [MenuItem::class, FoodOrder::class, LineItem::class], version = 3, exportSchema = false)
 abstract class MenuDatabase : RoomDatabase() {
     abstract fun menuDao(): MenuDao
-    abstract fun FoodOrderDao(): FoodOrderDao
+    abstract fun foodOrderDao(): FoodOrderDao
+    abstract fun lineItemDao(): LineItemDao
     companion object {
         @Volatile
         private var Instance: MenuDatabase? = null
@@ -69,7 +93,6 @@ abstract class MenuDatabase : RoomDatabase() {
                     .addCallback(object : Callback() {
                         override fun onOpen(db: SupportSQLiteDatabase) {
                             super.onOpen(db)
-// moving to a new thread
                             GlobalScope.launch(context = Dispatchers.IO){
                                 val studentDao = getDatabase(context).menuDao()
                                 prepopulateMenu(studentDao)
@@ -155,6 +178,8 @@ interface MenuRepository {
     suspend fun insertItem(item: MenuItem): Long
     suspend fun deleteItem(item: MenuItem)
     suspend fun updateItem(item: MenuItem)
+    suspend fun insertOrder(order: FoodOrder) : Long
+    suspend fun insertLineItem(item: LineItem)
 }
 
 class MenuRepositoryImpl(private val menuDb: MenuDatabase) : MenuRepository {
@@ -168,4 +193,12 @@ class MenuRepositoryImpl(private val menuDb: MenuDatabase) : MenuRepository {
         menuDb.menuDao().delete(item)
     override suspend fun updateItem(item: MenuItem) =
         menuDb.menuDao().update(item)
+
+    override suspend fun insertOrder(order: FoodOrder): Long {
+        return menuDb.foodOrderDao().insert(order)
+    }
+    override suspend fun insertLineItem(item: LineItem) {
+        menuDb.lineItemDao().insert(item)
+    }
+
 }

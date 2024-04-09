@@ -72,17 +72,9 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val menuVm: MenuViewModel = viewModel(factory = MenuViewModel.Factory)
                     LunchiliciousUI(menuVm)
-
                 }
             }
         }
-    }
-}
-
-@Composable
-fun TestButton(menuVm: MenuViewModel = viewModel(factory = MenuViewModel.Factory)){
-    Button(onClick = {menuVm.insertItem()}){
-        Text("Hello")
     }
 }
 
