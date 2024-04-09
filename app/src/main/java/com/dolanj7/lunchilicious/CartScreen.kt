@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-//TODO change to take in just the list of selected items
 @Composable
 fun CartScreen(cart: MutableList<MenuItem>, totalCost: Double, screenSwitch: () -> Unit, placeOrder: () -> Unit){
     Column{

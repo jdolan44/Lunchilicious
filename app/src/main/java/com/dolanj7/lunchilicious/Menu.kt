@@ -78,7 +78,7 @@ interface LineItemDao{
     @Query("Delete from line_item")
     suspend fun deleteAll()
 }
-@Database(entities = [MenuItem::class, FoodOrder::class, LineItem::class], version = 3, exportSchema = false)
+@Database(entities = [MenuItem::class, FoodOrder::class, LineItem::class], version = 4, exportSchema = false)
 abstract class MenuDatabase : RoomDatabase() {
     abstract fun menuDao(): MenuDao
     abstract fun foodOrderDao(): FoodOrderDao
