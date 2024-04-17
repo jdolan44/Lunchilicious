@@ -1,4 +1,4 @@
-package com.dolanj7.lunchilicious
+package com.dolanj7.lunchilicious.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.dolanj7.lunchilicious.data.entity.*
 
 @Composable
 fun CartScreen(cart: MutableList<MenuItem>, totalCost: Double, screenSwitch: () -> Unit, placeOrder: () -> Unit){

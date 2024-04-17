@@ -1,26 +1,21 @@
-package com.dolanj7.lunchilicious
+package com.dolanj7.lunchilicious.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,16 +27,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dolanj7.lunchilicious.data.entity.*
 
 @Composable
-fun OrderScreen(selectedIDs: MutableList<Long>, menuList: List<MenuItem>, screenSwitch: () -> Unit){
+fun OrderScreen(cart: MutableList<MenuItem>, menuList: List<MenuItem>, screenSwitch: () -> Unit){
     Column{
         //Text("Lunchilicious (database version)", modifier = Modifier.weight(1f))
         LazyColumn(modifier = Modifier.weight(15f)) {
             items(items = menuList) { item ->
-                MenuCard(item, selectedIDs.contains(item.id)){
-                    if(it){ selectedIDs.add(item.id) }
-                    else{ selectedIDs.remove(item.id) }
+                MenuCard(item, cart.contains(item)){
+                    if(it){ cart.add(item) }
+                    else{ cart.remove(item) }
                 }
             }
         }
