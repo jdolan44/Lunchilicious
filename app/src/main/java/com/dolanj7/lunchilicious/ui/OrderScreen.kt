@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dolanj7.lunchilicious.data.entity.*
@@ -49,7 +50,11 @@ fun OrderScreen(cart: MutableList<MenuItem>, menuList: List<MenuItem>, screenSwi
 
 
 @Composable
-fun MenuCard(item: MenuItem, selected: Boolean, onCheckedChange: (Boolean) -> Unit){
+@Preview
+fun MenuCard(item: MenuItem = MenuItem(0, "test", "My Item", "description here!", 0.99),
+             selected: Boolean = false,
+             onCheckedChange: (Boolean) -> Unit = {}
+            ){
     var expanded by remember{ mutableStateOf(false) }
     var checked by remember { mutableStateOf(selected) }
     ElevatedCard(
@@ -57,15 +62,16 @@ fun MenuCard(item: MenuItem, selected: Boolean, onCheckedChange: (Boolean) -> Un
             .fillMaxWidth()
             .padding(10.dp)
     ) {
-        Row (modifier = Modifier.fillMaxSize().padding(10.dp),
+        Row (modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically){
             DescriptionToggle(expanded){ expanded = !expanded }
-            ItemHeader(item, modifier =  Modifier.padding(start = 10.dp).weight(7f))
+            ItemHeader(item, modifier = Modifier
+                .padding(start = 10.dp)
+                .weight(7f))
 
-            //cost display
-            //TODO make this its own method (and reuse it for cart screen)
-            Text(modifier = Modifier.weight(2f), text = "$" + String.format("%.2f", item.unitPrice))
-
+            CostDisplay(cost = item.unitPrice, modifier = Modifier.weight(2f))
             //order checkbox
             Checkbox(modifier = Modifier.weight(1f),
                 checked = checked,

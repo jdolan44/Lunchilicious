@@ -11,3 +11,9 @@ fun CheckoutButton(label: String, modifier: Modifier = Modifier, onClick: () -> 
         Text(label)
     }
 }
+
+@Composable
+fun CostDisplay(label: String = "", cost: Double, modifier: Modifier = Modifier){
+    val costString = String.format("%.2f", cost)
+    Text(modifier = modifier, text = "$label $$costString")
+}

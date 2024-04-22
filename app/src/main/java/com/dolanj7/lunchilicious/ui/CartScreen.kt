@@ -23,8 +23,7 @@ fun CartScreen(cart: MutableList<MenuItem>, totalCost: Double, screenSwitch: () 
         }
 
         Divider(modifier = Modifier.padding(vertical = 5.dp))
-        //total cost
-        Text("Total: $" + String.format("%.2f", totalCost), modifier = Modifier.weight(2f))
+        CostDisplay(cost = totalCost, label = "Total: ", modifier = Modifier.weight(2f))
         CheckoutButton("Continue Shopping"){
             screenSwitch()
         }
@@ -47,6 +46,6 @@ fun CartItem(item: MenuItem){
             item.name,
             modifier = Modifier.width(150.dp)
         )
-        Text("$" + String.format("%.2f", item.unitPrice))
+        CostDisplay(cost = item.unitPrice)
     }
 }
