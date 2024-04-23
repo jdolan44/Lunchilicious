@@ -58,11 +58,7 @@ fun OrderScreen(cart: MutableList<MenuItem>, menuList: List<MenuItem>, onCheckou
 
 
 @Composable
-@Preview
-fun MenuCard(item: MenuItem = MenuItem(0, "test", "My Item", "description here!", 0.99),
-             selected: Boolean = false,
-             onCheckedChange: (Boolean) -> Unit = {}
-            ){
+fun MenuCard(item: MenuItem, selected: Boolean, onCheckedChange: (Boolean) -> Unit){
     var expanded by remember{ mutableStateOf(false) }
     var checked by remember { mutableStateOf(selected) }
     ElevatedCard(
@@ -71,7 +67,7 @@ fun MenuCard(item: MenuItem = MenuItem(0, "test", "My Item", "description here!"
             .padding(10.dp)
     ) {
         Row (modifier = Modifier
-            .fillMaxSize()
+            //.fillMaxSize()
             .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically){
             DescriptionToggle(expanded){ expanded = !expanded }
@@ -126,4 +122,11 @@ fun DescriptionBar(expanded: Boolean, description: String){
         Divider()
         Text(modifier = Modifier.padding(5.dp), text = description)
     }
+}
+
+@Composable
+@Preview
+fun MenuCardPreview(){
+    val testItem = MenuItem(0, "test", "My Item", "description here!", 0.99)
+    MenuCard(testItem, false){}
 }
