@@ -44,7 +44,7 @@ abstract class MenuDatabase : RoomDatabase() {
         }
 
         private suspend fun prepopulateMenu(menuItemDao: MenuItemDao) {
-            menuItemDao.deleteAll()
+            //menuItemDao.deleteAll()
             menuItemDao.insert(
                 MenuItem(
                     1, "Hoagie",

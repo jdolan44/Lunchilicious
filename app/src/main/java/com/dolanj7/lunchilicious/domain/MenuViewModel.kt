@@ -18,11 +18,10 @@ import kotlinx.coroutines.launch
 
 class MenuViewModel(private val menuRepo : MenuRepository): ViewModel() {
     val cart = mutableStateListOf<MenuItem>()
-    var onOrderScreen by mutableStateOf(true)
+    var currentScreen by mutableStateOf("order")
 
-    fun insertItem() {
+    fun insertMenuItem(item: MenuItem) {
         viewModelScope.launch {
-            val item = MenuItem(1, "test", "test food", "desc", 1.00)
             menuRepo.insertItem(item)
         }
     }

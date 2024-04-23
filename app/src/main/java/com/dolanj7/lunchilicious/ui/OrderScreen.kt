@@ -1,5 +1,6 @@
 package com.dolanj7.lunchilicious.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.dolanj7.lunchilicious.data.entity.*
 
 @Composable
-fun OrderScreen(cart: MutableList<MenuItem>, menuList: List<MenuItem>, screenSwitch: () -> Unit){
+fun OrderScreen(cart: MutableList<MenuItem>, menuList: List<MenuItem>, onCheckoutClick: () -> Unit, onAddItemClick: () -> Unit){
     Column{
         //Text("Lunchilicious (database version)", modifier = Modifier.weight(1f))
         LazyColumn(modifier = Modifier.weight(15f)) {
@@ -42,8 +43,15 @@ fun OrderScreen(cart: MutableList<MenuItem>, menuList: List<MenuItem>, screenSwi
                 }
             }
         }
-        CheckoutButton("View Cart"){
-            screenSwitch()
+
+        Row(modifier= Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround){
+            CheckoutButton("View Cart"){
+                onCheckoutClick()
+            }
+            CheckoutButton("Add menu item") {
+                onAddItemClick()
+            }
         }
     }
 }
