@@ -5,6 +5,12 @@
       <entry key="MenuCardPreview">
         <State />
       </entry>
+      <entry key="MenuCardUpdatedPreview">
+        <State />
+      </entry>
+      <entry key="ToggleButtonPreview">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>
