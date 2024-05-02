@@ -16,26 +16,28 @@ import com.dolanj7.lunchilicious.ui.OrderScreen
 fun LunchiliciousUI(vm: MenuViewModel){
     val menuList by vm.getMenuListStream().collectAsState(initial = emptyList())
     Column(modifier = Modifier.padding(all = 10.dp)){
-        if(vm.currentScreen == "order"){
-            OrderScreen(vm.cart,
-                menuList,
-                onCheckoutClick = {vm.currentScreen = "cart"},
-                onAddItemClick = {vm.currentScreen = "addItem"}
+        when (vm.currentScreen) {
+            "order" -> {
+                OrderScreen(vm.cart,
+                    menuList,
+                    onCheckoutClick = {vm.currentScreen = "cart"},
+                    onAddItemClick = {vm.currentScreen = "addItem"}
                 )
-        }
-        else if(vm.currentScreen == "cart"){
-            val totalCost = vm.getTotalCost()
-            CartScreen(vm.cart, totalCost,
-                screenSwitch = {vm.currentScreen = "order"},
-                placeOrder = {
-                    vm.placeOrder(vm.cart, totalCost)
-            })
-        }
-        else if(vm.currentScreen == "addItem"){
-            AddItemScreen(
-                saveItem = {vm.insertMenuItem(it)},
-                onBackButtonClick = {vm.currentScreen = "order"}
-            )
+            }
+            "cart" -> {
+                val totalCost = vm.getTotalCost()
+                CartScreen(vm.cart, totalCost,
+                    screenSwitch = {vm.currentScreen = "order"},
+                    placeOrder = {
+                        vm.placeOrder(vm.cart, totalCost)
+                    })
+            }
+            "addItem" -> {
+                AddItemScreen(
+                    saveItem = {vm.insertMenuItem(it)},
+                    onBackButtonClick = {vm.currentScreen = "order"}
+                )
+            }
         }
     }
 }
