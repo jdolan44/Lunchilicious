@@ -16,7 +16,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-@Database(entities = [MenuItem::class, FoodOrder::class, LineItem::class], version = 4, exportSchema = false)
+@Database(entities = [MenuItem::class, FoodOrder::class, LineItem::class], version = 5, exportSchema = false)
 abstract class MenuDatabase : RoomDatabase() {
     abstract fun menuItemDao(): MenuItemDao
     abstract fun foodOrderDao(): FoodOrderDao
@@ -24,7 +24,7 @@ abstract class MenuDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var Instance: MenuDatabase? = null
-        fun getDatabase(context: Context): MenuDatabase {
+        fun getDatabase(context: Context, prepopulate: Boolean = false): MenuDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context,
                     MenuDatabase::class.java, "menu_database")
@@ -32,8 +32,10 @@ abstract class MenuDatabase : RoomDatabase() {
                         override fun onOpen(db: SupportSQLiteDatabase) {
                             super.onOpen(db)
                             GlobalScope.launch(context = Dispatchers.IO){
-                                val studentDao = getDatabase(context).menuItemDao()
-                                prepopulateMenu(studentDao)
+                                if(prepopulate){
+                                    val studentDao = getDatabase(context).menuItemDao()
+                                    prepopulateMenu(studentDao)
+                                }
                             }
                         }
                     })

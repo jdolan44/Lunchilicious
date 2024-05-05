@@ -16,13 +16,13 @@ import com.dolanj7.lunchilicious.data.entity.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class MenuViewModel(private val menuRepo : MenuRepository): ViewModel() {
+class MenuViewModel(private val menuRepository : MenuRepository): ViewModel() {
     val cart = mutableStateListOf<MenuItem>()
     var currentScreen by mutableStateOf("order")
 
     fun insertMenuItem(item: MenuItem) {
         viewModelScope.launch {
-            menuRepo.insertItem(item)
+            menuRepository.insertItem(item)
         }
     }
 
@@ -35,17 +35,17 @@ class MenuViewModel(private val menuRepo : MenuRepository): ViewModel() {
     }
 
     fun getMenuListStream(): Flow<List<MenuItem>> {
-        return menuRepo.getMenuListStream()
+        return menuRepository.getMenuListStream()
     }
 
     fun placeOrder(items: MutableList<MenuItem>, totalCost: Double) {
         viewModelScope.launch {
-            val oid = menuRepo.insertOrder(FoodOrder(totalCost = totalCost))
+            val oid = menuRepository.insertOrder(FoodOrder(totalCost = totalCost))
             var lineNo: Long = 1
             items.forEach {
                 val lineItem = LineItem(oid, lineNo, it.id)
                 lineNo += 1
-                menuRepo.insertLineItem(lineItem)
+                menuRepository.insertLineItem(lineItem)
             }
         }
     }
@@ -53,10 +53,10 @@ class MenuViewModel(private val menuRepo : MenuRepository): ViewModel() {
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val myRepository =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as
-                            MenuApplication).menuRepository
-                MenuViewModel(menuRepo = myRepository)
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as
+                        MenuApplication)
+                val myRepo =application.menuRepo
+                MenuViewModel(myRepo)
             }
         }
     }

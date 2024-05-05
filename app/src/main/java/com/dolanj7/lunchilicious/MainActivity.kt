@@ -10,17 +10,17 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dolanj7.lunchilicious.data.MenuDatabase
-import com.dolanj7.lunchilicious.data.MenuRepositoryImpl
+import com.dolanj7.lunchilicious.data.MenuRepositoryWebImpl
 import com.dolanj7.lunchilicious.domain.MenuViewModel
 import com.dolanj7.lunchilicious.ui.theme.LunchiliciousTheme
 import com.dolanj7.lunchilicious.domain.MenuRepository
 
 class MenuApplication : Application() {
-    lateinit var menuRepository: MenuRepository
+    lateinit var menuRepo: MenuRepository
     override fun onCreate() {
         super.onCreate()
-        menuRepository =
-            MenuRepositoryImpl(MenuDatabase.getDatabase(this))
+        menuRepo =
+            MenuRepositoryWebImpl(MenuDatabase.getDatabase(this))
     }
 }
 
