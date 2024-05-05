@@ -40,7 +40,7 @@ import com.dolanj7.lunchilicious.ui.theme.Purple40
 @Composable
 fun OrderScreen(cart: MutableList<MenuItem>, menuList: List<MenuItem>, onCheckoutClick: () -> Unit, onAddItemClick: () -> Unit){
     Column{
-        //Text("Lunchilicious (database version)", modifier = Modifier.weight(1f))
+        //Text("${menuList.size}", modifier = Modifier.weight(1f))
         LazyColumn(modifier = Modifier.weight(15f)) {
             items(items = menuList) { item ->
                 MenuCard(item, cart.contains(item)){
