@@ -49,7 +49,7 @@ fun OrderScreen(cart: MutableList<MenuItem>, menuList: List<MenuItem>, onCheckou
                 }
             }
         }
-
+        Divider(modifier = Modifier.padding(vertical = 5.dp))
         Row(modifier= Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround){
             CheckoutButton("View Cart"){

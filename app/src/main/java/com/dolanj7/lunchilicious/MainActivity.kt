@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val menuVm: MenuViewModel = viewModel(factory = MenuViewModel.Factory)
-                    LunchiliciousUI(menuVm)
+                    LunchiliciousNav(menuVm)
                 }
             }
         }

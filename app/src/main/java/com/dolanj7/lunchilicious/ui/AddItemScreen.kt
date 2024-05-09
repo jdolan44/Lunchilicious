@@ -1,5 +1,6 @@
 package com.dolanj7.lunchilicious.ui
 
+import androidx.compose.foundation.layout.Column
 import com.dolanj7.lunchilicious.data.entity.MenuItem
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,25 +14,43 @@ import com.dolanj7.lunchilicious.domain.FormState
 
 @Composable
 fun AddItemScreen(saveItem: (MenuItem) -> Unit, onBackButtonClick: () -> Unit){
+    Column(modifier = Modifier.padding(all = 10.dp)) {
+        val formState: FormState = viewModel()
+        InputField(
+            text = "Name",
+            value = formState.name,
+            placeholder = "ex: Burger"
+        ) { formState.name = it }
+        InputField(
+            text = "Type",
+            value = formState.type,
+            placeholder = "ex: Hot"
+        ) { formState.type = it }
+        InputField(
+            text = "Description",
+            value = formState.description,
+            placeholder = ""
+        ) { formState.description = it }
+        InputField(
+            text = "Unit Price",
+            value = formState.price,
+            placeholder = "ex: 2.99"
+        ) { formState.price = it }
 
-    val formState : FormState = viewModel()
+        CheckoutButton(label = "Save Item", modifier = Modifier.fillMaxWidth(.5f)) {
+            val item = formState.toMenuItem()
+            saveItem(item)
+            onBackButtonClick()
+        }
 
-    InputField(text = "Name", value = formState.name, placeholder = "ex: Burger"){formState.name = it}
-    InputField(text = "Type", value = formState.type, placeholder = "ex: Hot"){formState.type = it}
-    InputField(text = "Description", value = formState.description, placeholder = ""){formState.description = it}
-    InputField(text = "Unit Price", value = formState.price, placeholder = "ex: 2.99"){formState.price = it}
-
-    CheckoutButton(label = "Save Item", modifier = Modifier.fillMaxWidth(.5f)){
-        val item = formState.toMenuItem()
-        saveItem(item)
-        onBackButtonClick()
+        CheckoutButton(label = "Reset", modifier = Modifier.fillMaxWidth(.5f)) {
+            formState.reset()
+        }
+        CheckoutButton(
+            label = "Back", modifier = Modifier.fillMaxWidth(.5f),
+            onClick = onBackButtonClick
+        )
     }
-
-    CheckoutButton(label = "Reset", modifier = Modifier.fillMaxWidth(.5f)) {
-        formState.reset()
-    }
-    CheckoutButton(label = "Back", modifier = Modifier.fillMaxWidth(.5f),
-        onClick = onBackButtonClick)
 }
 
 @Composable
