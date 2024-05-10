@@ -16,11 +16,8 @@ class MenuRepositoryImpl(private val menuDb: MenuDatabase) : MenuRepository {
     override suspend fun updateItem(item: MenuItem) =
         menuDb.menuItemDao().update(item)
 
-    override suspend fun insertOrder(order: FoodOrder): Long {
-        return menuDb.foodOrderDao().insert(order)
-    }
-    override suspend fun insertLineItem(item: LineItem) {
-        menuDb.lineItemDao().insert(item)
+    override suspend fun placeOrder(items: List<MenuItem>, totalCost: Double) {
+        TODO("Not yet implemented")
     }
 
 }

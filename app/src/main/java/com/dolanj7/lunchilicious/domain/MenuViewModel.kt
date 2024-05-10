@@ -9,8 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.dolanj7.lunchilicious.data.entity.FoodOrder
-import com.dolanj7.lunchilicious.data.entity.LineItem
 import com.dolanj7.lunchilicious.MenuApplication
 import com.dolanj7.lunchilicious.data.entity.*
 import kotlinx.coroutines.flow.Flow
@@ -40,13 +38,7 @@ class MenuViewModel(private val menuRepository : MenuRepository): ViewModel() {
 
     fun placeOrder(items: MutableList<MenuItem>, totalCost: Double) {
         viewModelScope.launch {
-            val oid = menuRepository.insertOrder(FoodOrder(totalCost = totalCost))
-            var lineNo: Long = 1
-            items.forEach {
-                val lineItem = LineItem(oid, lineNo, it.id)
-                lineNo += 1
-                menuRepository.insertLineItem(lineItem)
-            }
+            menuRepository.placeOrder(items, totalCost)
         }
     }
 

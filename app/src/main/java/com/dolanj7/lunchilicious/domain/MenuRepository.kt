@@ -11,6 +11,5 @@ interface MenuRepository {
     suspend fun insertItem(item: MenuItem): Long
     suspend fun deleteItem(item: MenuItem)
     suspend fun updateItem(item: MenuItem)
-    suspend fun insertOrder(order: FoodOrder) : Long
-    suspend fun insertLineItem(item: LineItem)
+    suspend fun placeOrder(items: List<MenuItem>, totalCost: Double)
 }
