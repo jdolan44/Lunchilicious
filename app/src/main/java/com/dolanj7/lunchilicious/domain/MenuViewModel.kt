@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 
 class MenuViewModel(private val menuRepository : MenuRepository): ViewModel() {
     val cart = mutableStateListOf<MenuItem>()
-    var currentScreen by mutableStateOf("order")
 
     fun insertMenuItem(item: MenuItem) {
         viewModelScope.launch {
@@ -39,6 +38,12 @@ class MenuViewModel(private val menuRepository : MenuRepository): ViewModel() {
     fun placeOrder(items: MutableList<MenuItem>, totalCost: Double) {
         viewModelScope.launch {
             menuRepository.placeOrder(items, totalCost)
+        }
+    }
+
+    fun refresh(){
+        viewModelScope.launch {
+            menuRepository.refresh()
         }
     }
 

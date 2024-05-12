@@ -20,4 +20,8 @@ class MenuRepositoryImpl(private val menuDb: MenuDatabase) : MenuRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun refresh() {
+        TODO("Not yet implemented")
+    }
+
 }

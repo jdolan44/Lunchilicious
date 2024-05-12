@@ -30,15 +30,16 @@ class MenuRepositoryWebImpl(private val menuDb: MenuDatabase) : MenuRepository {
             .build()
         menuClient = retrofit.create(MenuItemClient::class.java)
         orderClient = retrofit.create(OrderClient::class.java)
-        populateDBFromWeb()
+        //GlobalScope.launch{
+        //    refresh()
+        //}
     }
-    private fun populateDBFromWeb(){
-        GlobalScope.launch{
-            menuClient.getMenuItems().map{
-                val item = convertMenuItem(it)
-                menuDb.menuItemDao().insert(item)
-            }
+    override suspend fun refresh(){
+        menuClient.getMenuItems().map {
+            val item = convertMenuItem(it)
+            menuDb.menuItemDao().insert(item)
         }
+        Log.i("REFRESH", "refresh success!")
     }
     private fun convertMenuItem(item: MenuItemRetrofit): MenuItem{
         return MenuItem(item.id.toLong(), item.type, item.name, item.description, item.unitPrice)

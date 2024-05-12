@@ -3,17 +3,16 @@ package com.dolanj7.lunchilicious
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.dolanj7.lunchilicious.domain.MenuViewModel
 import com.dolanj7.lunchilicious.ui.AddItemScreen
 import com.dolanj7.lunchilicious.ui.CartScreen
 import com.dolanj7.lunchilicious.ui.OrderScreen
 
 @Composable
-fun LunchiliciousNav(vm: MenuViewModel){
-    val navController = rememberNavController()
+fun LunchiliciousNavHost(vm: MenuViewModel, navController: NavHostController){
     val menuList by vm.getMenuListStream().collectAsState(initial = emptyList())
 
     NavHost(navController = navController,
@@ -23,7 +22,8 @@ fun LunchiliciousNav(vm: MenuViewModel){
             OrderScreen(vm.cart,
                 menuList,
                 onCheckoutClick = {navController.navigate("cart")},
-                onAddItemClick = {navController.navigate("additem")}
+                onAddItemClick = {navController.navigate("additem")},
+                onRefreshClick = {vm.refresh()}
             )
         }
         composable("cart"){

@@ -22,6 +22,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,26 +39,58 @@ import com.dolanj7.lunchilicious.data.entity.*
 import com.dolanj7.lunchilicious.ui.theme.Purple40
 
 @Composable
-fun OrderScreen(cart: MutableList<MenuItem>, menuList: List<MenuItem>, onCheckoutClick: () -> Unit, onAddItemClick: () -> Unit){
-    Column{
-        //Text("${menuList.size}", modifier = Modifier.weight(1f))
-        LazyColumn(modifier = Modifier.weight(15f)) {
-            items(items = menuList) { item ->
-                MenuCard(item, cart.contains(item)){
-                    if(it){ cart.add(item) }
-                    else{ cart.remove(item) }
-                }
+fun OrderScreen(cart: MutableList<MenuItem>,
+                menuList: List<MenuItem>,
+                onCheckoutClick: () -> Unit,
+                onAddItemClick: () -> Unit,
+                onRefreshClick: () -> Unit){
+    Scaffold(
+        topBar = { LunchiliciousTopBar(
+            showBackButton = false,
+            onSettingsClick = {},
+            onBackClick = {}
+        )},
+        floatingActionButton = {
+            FloatingActionButton(onClick = onAddItemClick) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+        },
+        bottomBar = {
+            CheckoutButtons(onCheckoutClick, onRefreshClick)
+        }
+    ) {
+        Column(modifier = Modifier.padding(it)){
+            MenuItemsList(cart, menuList, Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+fun MenuItemsList(cart: MutableList<MenuItem>,
+                  menuList: List<MenuItem>,
+                  modifier: Modifier = Modifier) {
+    LazyColumn(modifier = modifier){
+        items(items = menuList) { item ->
+            MenuCard(item, cart.contains(item)){
+                if(it){ cart.add(item) }
+                else{ cart.remove(item) }
             }
         }
-        Divider(modifier = Modifier.padding(vertical = 5.dp))
-        Row(modifier= Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround){
-            CheckoutButton("View Cart"){
-                onCheckoutClick()
-            }
-            CheckoutButton("Add menu item") {
-                onAddItemClick()
-            }
+    }
+}
+
+@Composable
+fun CheckoutButtons(
+    onCheckoutClick: () -> Unit,
+    onRefreshClick: () -> Unit
+) {
+    Row(modifier= Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceAround){
+        CheckoutButton("View Cart"){
+            onCheckoutClick()
+        }
+        CheckoutButton("Refresh") {
+            onRefreshClick()
         }
     }
 }

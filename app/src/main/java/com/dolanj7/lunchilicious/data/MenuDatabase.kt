@@ -16,7 +16,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-@Database(entities = [MenuItem::class, FoodOrder::class, LineItem::class], version = 5, exportSchema = false)
+@Database(entities = [MenuItem::class, FoodOrder::class, LineItem::class], version = 6, exportSchema = false)
 abstract class MenuDatabase : RoomDatabase() {
     abstract fun menuItemDao(): MenuItemDao
     abstract fun foodOrderDao(): FoodOrderDao

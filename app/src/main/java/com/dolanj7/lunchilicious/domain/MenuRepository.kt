@@ -12,4 +12,5 @@ interface MenuRepository {
     suspend fun deleteItem(item: MenuItem)
     suspend fun updateItem(item: MenuItem)
     suspend fun placeOrder(items: List<MenuItem>, totalCost: Double)
+    suspend fun refresh()
 }

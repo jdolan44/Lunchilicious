@@ -9,11 +9,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
+import androidx.work.workDataOf
 import com.dolanj7.lunchilicious.data.MenuDatabase
 import com.dolanj7.lunchilicious.data.MenuRepositoryWebImpl
+import com.dolanj7.lunchilicious.data.MenuWorker
 import com.dolanj7.lunchilicious.domain.MenuViewModel
 import com.dolanj7.lunchilicious.ui.theme.LunchiliciousTheme
 import com.dolanj7.lunchilicious.domain.MenuRepository
+import java.util.concurrent.TimeUnit
 
 class MenuApplication : Application() {
     lateinit var menuRepo: MenuRepository
@@ -36,7 +43,13 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val menuVm: MenuViewModel = viewModel(factory = MenuViewModel.Factory)
-                    LunchiliciousNav(menuVm)
+                    val myWorkRequest: WorkRequest =
+                        PeriodicWorkRequestBuilder<MenuWorker>(15, TimeUnit.MINUTES)
+                            .build()
+                    WorkManager.getInstance(this)
+                        .enqueue(myWorkRequest)
+                    val navController = rememberNavController()
+                    LunchiliciousNavHost(menuVm, navController)
                 }
             }
         }
