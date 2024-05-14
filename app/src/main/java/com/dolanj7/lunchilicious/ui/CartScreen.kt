@@ -17,14 +17,15 @@ import com.dolanj7.lunchilicious.data.entity.*
 @Composable
 fun CartScreen(cart: MutableList<MenuItem>,
                totalCost: Double,
-               screenSwitch: () -> Unit,
+               onBackClick: () -> Unit,
+               onSettingsClick: () -> Unit,
                placeOrder: () -> Unit){
     Scaffold(
         topBar = { LunchiliciousTopBar(
             title = "Shopping Cart",
             showBackButton = true,
-            onSettingsClick = {},
-            onBackClick = screenSwitch
+            onSettingsClick = onSettingsClick,
+            onBackClick = onBackClick
         )}
     ){
         Column(modifier = Modifier.padding(it)){
@@ -37,12 +38,12 @@ fun CartScreen(cart: MutableList<MenuItem>,
             Divider(modifier = Modifier.padding(vertical = 5.dp))
             CostDisplay(cost = totalCost, label = "Total: ", modifier = Modifier.weight(2f))
             CheckoutButton("Continue Shopping"){
-                screenSwitch()
+                onBackClick()
             }
             CheckoutButton("Checkout"){
                 placeOrder()
                 //move back to order screen after checkout
-                screenSwitch()
+                onBackClick()
             }
         }
     }

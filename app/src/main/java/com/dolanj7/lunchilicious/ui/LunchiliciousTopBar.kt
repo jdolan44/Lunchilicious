@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 @Preview
 fun LunchiliciousTopBar(title: String = "Lunchilicious",
                         showBackButton: Boolean = true,
+                        showSettingsBar: Boolean = true,
                         onSettingsClick: () -> Unit = {},
                         onBackClick: () -> Unit = {}){
     CenterAlignedTopAppBar(
@@ -50,13 +51,15 @@ fun LunchiliciousTopBar(title: String = "Lunchilicious",
             titleContentColor = Color.White,
         ),
         actions = {
-            IconButton(onClick = onSettingsClick) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    tint = Color.White,
-                    contentDescription = "Settings",
-                    modifier = Modifier.padding(8.dp),
-                )
+            if(showSettingsBar){
+                IconButton(onClick = onSettingsClick) {
+                    Icon(
+                        imageVector = Icons.Filled.Menu,
+                        tint = Color.White,
+                        contentDescription = "Settings",
+                        modifier = Modifier.padding(8.dp),
+                    )
+                }
             }
     })
 }

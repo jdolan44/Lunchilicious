@@ -4,20 +4,19 @@ import androidx.compose.foundation.layout.Column
 import com.dolanj7.lunchilicious.data.entity.MenuItem
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dolanj7.lunchilicious.domain.FormState
 
 @Composable
-fun AddItemScreen(saveItem: (MenuItem) -> Unit, onBackButtonClick: () -> Unit){
+fun AddItemScreen(saveItem: (MenuItem) -> Unit, onBackButtonClick: () -> Unit,
+                  onSettingsClick: () -> Unit){
     Scaffold(
         topBar = {
-            LunchiliciousTopBar(title = "Add Item", onBackClick = onBackButtonClick)
+            LunchiliciousTopBar(title = "Add Item", onBackClick = onBackButtonClick,
+                onSettingsClick = onSettingsClick)
         }
     ){
         FormBody(saveItem, onBackButtonClick, Modifier.padding(it))
@@ -63,17 +62,4 @@ fun FormBody(saveItem: (MenuItem) -> Unit, onBackButtonClick: () -> Unit, modifi
             onClick = onBackButtonClick
         )
     }
-}
-@Composable
-fun InputField(text:String, value: String, placeholder: String, onValueChanged: (String) -> Unit){
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChanged,
-        label = { Text(text) },
-        modifier = Modifier
-            .padding(5.dp)
-            .fillMaxWidth(.7f),
-        placeholder = { Text(placeholder) }
-
-    )
 }

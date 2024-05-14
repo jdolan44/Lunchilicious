@@ -24,4 +24,12 @@ class MenuRepositoryImpl(private val menuDb: MenuDatabase) : MenuRepository {
         TODO("Not yet implemented")
     }
 
+    override fun getOrderById(id: String): Flow<FoodOrderRetrofit?> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLineItemsById(id: String): Flow<List<LineItemRetrofit>?> {
+        TODO("Not yet implemented")
+    }
+
 }

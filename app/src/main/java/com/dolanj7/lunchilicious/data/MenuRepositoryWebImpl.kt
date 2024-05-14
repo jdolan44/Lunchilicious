@@ -10,6 +10,8 @@ import com.dolanj7.lunchilicious.data.entity.MenuItemRetrofit
 import com.dolanj7.lunchilicious.domain.MenuRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -33,13 +35,6 @@ class MenuRepositoryWebImpl(private val menuDb: MenuDatabase) : MenuRepository {
         //GlobalScope.launch{
         //    refresh()
         //}
-    }
-    override suspend fun refresh(){
-        menuClient.getMenuItems().map {
-            val item = convertMenuItem(it)
-            menuDb.menuItemDao().insert(item)
-        }
-        Log.i("REFRESH", "refresh success!")
     }
     private fun convertMenuItem(item: MenuItemRetrofit): MenuItem{
         return MenuItem(item.id.toLong(), item.type, item.name, item.description, item.unitPrice)
@@ -89,4 +84,31 @@ class MenuRepositoryWebImpl(private val menuDb: MenuDatabase) : MenuRepository {
         orderClient.addLineItems(lineItems)
     }
 
+    override suspend fun refresh(){
+        menuClient.getMenuItems().map {
+            val item = convertMenuItem(it)
+            menuDb.menuItemDao().insert(item)
+        }
+        Log.i("REFRESH", "refresh success!")
+    }
+
+    override fun getOrderById(id: String): Flow<FoodOrderRetrofit?> = flow{
+
+        try{
+            val order = orderClient.getOrderById(id)
+            emit(order)
+        }catch(throwable: Throwable){
+            emit(null)
+        }
+
+    }
+
+    override fun getLineItemsById(id: String): Flow<List<LineItemRetrofit>?> = flow{
+        try{
+            emit(orderClient.getLineItemsById(id))
+        }
+        catch(throwable: Throwable){
+            emit(null)
+        }
+    }
 }

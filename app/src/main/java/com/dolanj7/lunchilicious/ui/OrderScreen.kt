@@ -43,12 +43,12 @@ fun OrderScreen(cart: MutableList<MenuItem>,
                 menuList: List<MenuItem>,
                 onCheckoutClick: () -> Unit,
                 onAddItemClick: () -> Unit,
-                onRefreshClick: () -> Unit){
+                onRefreshClick: () -> Unit,
+                onSettingsClick: () -> Unit){
     Scaffold(
         topBar = { LunchiliciousTopBar(
             showBackButton = false,
-            onSettingsClick = {},
-            onBackClick = {}
+            onSettingsClick = onSettingsClick
         )},
         floatingActionButton = {
             FloatingActionButton(onClick = onAddItemClick) {

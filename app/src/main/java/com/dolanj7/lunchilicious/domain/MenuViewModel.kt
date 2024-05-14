@@ -12,6 +12,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dolanj7.lunchilicious.MenuApplication
 import com.dolanj7.lunchilicious.data.entity.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 class MenuViewModel(private val menuRepository : MenuRepository): ViewModel() {
@@ -46,6 +48,10 @@ class MenuViewModel(private val menuRepository : MenuRepository): ViewModel() {
             menuRepository.refresh()
         }
     }
+
+    fun getOrderById(id: String): Flow<FoodOrderRetrofit?> = menuRepository.getOrderById(id)
+
+    fun getLineItemsById(id: String): Flow<List<LineItemRetrofit>?> = menuRepository.getLineItemsById(id)
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
