@@ -1,7 +1,5 @@
 package com.dolanj7.lunchilicious.domain
 
-import com.dolanj7.lunchilicious.data.entity.FoodOrder
-import com.dolanj7.lunchilicious.data.entity.LineItem
 import com.dolanj7.lunchilicious.data.entity.*
 import kotlinx.coroutines.flow.Flow
 

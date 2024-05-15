@@ -1,6 +1,5 @@
 package com.dolanj7.lunchilicious.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
