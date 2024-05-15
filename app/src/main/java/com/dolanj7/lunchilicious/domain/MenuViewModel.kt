@@ -37,6 +37,10 @@ class MenuViewModel(private val menuRepository : MenuRepository): ViewModel() {
         return menuRepository.getMenuListStream()
     }
 
+    fun getMenuItemStream(id: Long): Flow<MenuItem?>{
+        return menuRepository.getItemStream(id)
+    }
+
     fun placeOrder(items: MutableList<MenuItem>, totalCost: Double) {
         viewModelScope.launch {
             menuRepository.placeOrder(items, totalCost)

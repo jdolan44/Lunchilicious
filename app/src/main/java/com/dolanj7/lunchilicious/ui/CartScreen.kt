@@ -1,14 +1,11 @@
 package com.dolanj7.lunchilicious.ui
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -49,17 +46,3 @@ fun CartScreen(cart: MutableList<MenuItem>,
     }
 }
 
-@Composable
-fun CartItem(item: MenuItem){
-    Row (modifier = Modifier.padding(vertical = 5.dp)){
-        Text(
-            "id: ${item.id}, ${item.type}",
-            modifier = Modifier.width(100.dp)
-        )
-        Text(
-            item.name,
-            modifier = Modifier.width(150.dp)
-        )
-        CostDisplay(cost = item.unitPrice)
-    }
-}
