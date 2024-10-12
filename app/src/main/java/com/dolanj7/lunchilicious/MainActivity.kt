@@ -15,6 +15,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import androidx.work.workDataOf
 import com.dolanj7.lunchilicious.data.MenuDatabase
+import com.dolanj7.lunchilicious.data.MenuRepositoryImpl
 import com.dolanj7.lunchilicious.data.MenuRepositoryWebImpl
 import com.dolanj7.lunchilicious.data.MenuWorker
 import com.dolanj7.lunchilicious.domain.MenuViewModel
@@ -27,7 +28,7 @@ class MenuApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         menuRepo =
-            MenuRepositoryWebImpl(MenuDatabase.getDatabase(this))
+            MenuRepositoryImpl(MenuDatabase.getDatabase(this))
     }
 }
 

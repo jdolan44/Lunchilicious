@@ -13,8 +13,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.dolanj7.lunchilicious.data.entity.FoodOrderRetrofit
-import com.dolanj7.lunchilicious.data.entity.LineItemRetrofit
+import com.dolanj7.lunchilicious.data.entity.FoodOrder
+import com.dolanj7.lunchilicious.data.entity.LineItem
 import com.dolanj7.lunchilicious.data.entity.MenuItem
 import kotlinx.coroutines.flow.Flow
 
@@ -22,13 +22,13 @@ import kotlinx.coroutines.flow.Flow
 fun OrderDetailsScreen(
     onSettingsClick: () -> Unit,
     onBackClick: () -> Unit,
-    findOrder: (String) -> Flow<FoodOrderRetrofit?>,
-    findLineItems: (String) -> Flow<List<LineItemRetrofit>?>,
+    findOrder: (String) -> Flow<FoodOrder?>,
+    findLineItems: (String) -> Flow<List<LineItem>?>,
     getItemById: (Long) -> Flow<MenuItem?>
 ){
     var id by rememberSaveable { mutableStateOf("") }
-    val order: Flow<FoodOrderRetrofit?> = findOrder(id)
-    val lineItems: Flow<List<LineItemRetrofit>?> = findLineItems(id)
+    val order: Flow<FoodOrder?> = findOrder(id)
+    val lineItems: Flow<List<LineItem>?> = findLineItems(id)
 
     Scaffold(topBar = { LunchiliciousTopBar(
         title = "Find Order Details",
@@ -48,7 +48,7 @@ fun OrderDetailsScreen(
 }
 
 @Composable
-fun OrderDisplay(order: Flow<FoodOrderRetrofit?>) {
+fun OrderDisplay(order: Flow<FoodOrder?>) {
     val collected by order.collectAsState(initial = null)
     collected?.let {
         Text("Order date: ${it.orderDate}")
@@ -58,7 +58,7 @@ fun OrderDisplay(order: Flow<FoodOrderRetrofit?>) {
 }
 
 @Composable
-fun LineItemsDisplay(lineItems: Flow<List<LineItemRetrofit>?>, getItemById: (Long) -> Flow<MenuItem?>){
+fun LineItemsDisplay(lineItems: Flow<List<LineItem>?>, getItemById: (Long) -> Flow<MenuItem?>){
     val collected by lineItems.collectAsState(initial = emptyList())
     collected?.forEach{
         val item by getItemById(it.itemId.toLong()).collectAsState(initial = null)

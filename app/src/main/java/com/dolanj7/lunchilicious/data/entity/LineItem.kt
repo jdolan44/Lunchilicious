@@ -4,7 +4,8 @@ import androidx.room.Entity
 
 @Entity(tableName = "line_item", primaryKeys = ["oid", "lineNo"])
 data class LineItem(
-    val oid: Long = 0,
+    val oid: String,
     val lineNo: Long,
-    val itemId: Long = 0
+    val itemId: Long = 0,
+    val quantity: Long = 1
 )

@@ -51,9 +51,8 @@ fun LunchiliciousNavHost(vm: MenuViewModel, navController: NavHostController){
                 onSettingsClick = {navController.popBackStack("settings", false)},
                 onBackClick = {navController.popBackStack("settings", false)},
                 findOrder = {vm.getOrderById(it)},
-                findLineItems = {vm.getLineItemsById(it)},
-                getItemById = {vm.getMenuItemStream(it)}
-            )
+                findLineItems = {vm.getLineItemsById(it)}
+            ) { vm.getMenuItemStream(it) }
         }
         composable("settings"){
             SettingsScreen(

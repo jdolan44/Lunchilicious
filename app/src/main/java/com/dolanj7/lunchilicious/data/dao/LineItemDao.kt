@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.dolanj7.lunchilicious.data.entity.LineItem
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LineItemDao{
@@ -18,4 +19,7 @@ interface LineItemDao{
     suspend fun delete(item: LineItem)
     @Query("Delete from line_item")
     suspend fun deleteAll()
+
+    @Query("SELECT * from line_item WHERE oid = :id")
+    fun getLineItems(id: String): Flow<List<LineItem>?>
 }

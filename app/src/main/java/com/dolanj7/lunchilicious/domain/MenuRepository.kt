@@ -11,6 +11,6 @@ interface MenuRepository {
     suspend fun updateItem(item: MenuItem)
     suspend fun placeOrder(items: List<MenuItem>, totalCost: Double)
     suspend fun refresh()
-    fun getOrderById(id: String): Flow<FoodOrderRetrofit?>
-    fun getLineItemsById(id: String): Flow<List<LineItemRetrofit>?>
+    fun getOrderById(id: String): Flow<FoodOrder?>
+    fun getLineItemsById(id: String): Flow<List<LineItem>?>
 }

@@ -3,7 +3,9 @@ package com.dolanj7.lunchilicious.data
 import android.util.Log
 import com.dolanj7.lunchilicious.data.client.MenuItemClient
 import com.dolanj7.lunchilicious.data.client.OrderClient
+import com.dolanj7.lunchilicious.data.entity.FoodOrder
 import com.dolanj7.lunchilicious.data.entity.FoodOrderRetrofit
+import com.dolanj7.lunchilicious.data.entity.LineItem
 import com.dolanj7.lunchilicious.data.entity.LineItemRetrofit
 import com.dolanj7.lunchilicious.data.entity.MenuItem
 import com.dolanj7.lunchilicious.data.entity.MenuItemRetrofit
@@ -92,23 +94,28 @@ class MenuRepositoryWebImpl(private val menuDb: MenuDatabase) : MenuRepository {
         Log.i("REFRESH", "refresh success!")
     }
 
-    override fun getOrderById(id: String): Flow<FoodOrderRetrofit?> = flow{
-
+    override fun getOrderById(id: String): Flow<FoodOrder?> = flow{
+        TODO("Not yet implemented")
+        /*
         try{
             val order = orderClient.getOrderById(id)
             emit(order)
         }catch(throwable: Throwable){
             emit(null)
         }
-
+        */
     }
 
-    override fun getLineItemsById(id: String): Flow<List<LineItemRetrofit>?> = flow{
+    override fun getLineItemsById(id: String): Flow<List<LineItem>?> = flow{
+        TODO("Not yet implemented")
+        /*
         try{
             emit(orderClient.getLineItemsById(id))
         }
         catch(throwable: Throwable){
             emit(null)
         }
+
+         */
     }
 }

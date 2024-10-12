@@ -48,9 +48,9 @@ class MenuViewModel(private val menuRepository : MenuRepository): ViewModel() {
         }
     }
 
-    fun getOrderById(id: String): Flow<FoodOrderRetrofit?> = menuRepository.getOrderById(id)
+    fun getOrderById(id: String): Flow<FoodOrder?> = menuRepository.getOrderById(id)
 
-    fun getLineItemsById(id: String): Flow<List<LineItemRetrofit>?> = menuRepository.getLineItemsById(id)
+    fun getLineItemsById(id: String): Flow<List<LineItem>?> = menuRepository.getLineItemsById(id)
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

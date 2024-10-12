@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.dolanj7.lunchilicious.data.entity.FoodOrder
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FoodOrderDao{
@@ -18,4 +19,7 @@ interface FoodOrderDao{
     suspend fun delete(order: FoodOrder)
     @Query("Delete from food_order")
     suspend fun deleteAll()
+
+    @Query("SELECT * from food_order WHERE orderId = :id")
+    fun getFoodOrder(id: String): Flow<FoodOrder>
 }
